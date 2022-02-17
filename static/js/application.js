@@ -16,7 +16,7 @@ function startChat(room, handle) {
 
   inbox.onmessage = function(message) {
     var data = JSON.parse(message.data);
-    $("#chat-text").append("<div class='panel panel-default'><div class='panel-heading'>" + $('<span/>').text(data.handle).html() + "</div><div class='panel-body'>" + $('<span/>').text(data.text).html() + "</div></div>");
+    $("#chat-text").append("<div class='logitem'><p class='strangermsg'><strong class='msgsource'>" + $('<span>').text(data.handle + ': ').html() + "</strong><span class='>notranslate'>" + $('<span>').text(data.text).html() + "</span></p></div>");
     $("#chat-text").stop().animate({
       scrollTop: $('#chat-text')[0].scrollHeight
     }, 800);
@@ -41,6 +41,14 @@ function startChat(room, handle) {
   });
 }
 
+console.log(window.atob('TG9vayBhdCB0aGlzLCBhIHNtYWxsIGVhc3RlciBlZ2cuIERpc2NsYWltZXI6IEFib3V0IHRoZSBgU2F5IFNUQU5EIFdJVEggSE9ORyBLT05HIEFHQUlOU1QgVEhFIENDUCFgIHdhcyBqdXN0IGNvcGllZCBmcm9tIE9tZWdsZQ'));
+console.log(window.atob('U2l0dWF0aW9uIGFzaWRlLCBJJ20gYWxsIGZvciBmcmVlZG9tLCBzbyBpbiB0aGUgZW5kIEkganVzdCBkZWNpZGVkIHRvIGxlYXZlIGl0Lg'));
+console.log(window.atob('SGF2ZSBhIG5pY2UgZGF5IDop'));
+
+function showRoom(roomName) {
+  $("#displayroom").append(`You're in <em>${roomName}</em> room`);
+}
+
 $("#input-handle")[0].value = handle;
 
 $("#input-login").on("submit", function (event) {
@@ -55,6 +63,9 @@ $("#input-login").on("submit", function (event) {
     room = newRoom || room;
     handle = newHandle;
     startChat(room, handle);
+    showRoom(room);
     $.modal.close();
   }
 });
+
+

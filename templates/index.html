@@ -8,31 +8,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
   <body>
-    <div class="container">
-      <div class="jumbotron">
-        <h1>Python Websockets Chat Demo</h1>
-        <hr />
-        <p>This is a Python WebSockets Chat Demo. The code lives <a href="https://github.com/heroku-examples/python-websockets-chat">on GitHub</a>. </p>
-        <p>You can find the full guide in <a href="https://devcenter.heroku.com/articles/python-websockets">Heroku DevCenter</a>.</p>
-      </div>
-      <form id="input-form" class="form-inline">
-        <div class="form-group">
-          <input id="input-text" type="text" class="form-control" placeholder="Enter chat text here!" autofocus />
+    <div id="header" style="height: 57px;">
+      <h1 id="logo" style="display: inline-block;">
+        Kasvulabs-egle
+      </h1>
+      <h2 id="tagline" style="display: inline-block;">
+        talk with developers. <span id="displayroom"></span>
+      </h2>
+    </div>
+    <div class="chatbox3">
+      <div class="chatbox2">
+        <div class="chatbox">
+          <div class="logwrapper" style="top: 89px;">
+            <div class="logbox">
+              <div id="chat-text" style="position: relative; min-height: 100%;">
+                <div class="logitem">
+                  <p class="statuslog">You're now chatting :v. Say STAND WITH HONG KONG AGAINST THE CCP!</p>
+                </div>
+
+                <!-- TODO: Implement styles for own messages
+                  <div class="logitem">
+                  <p class="strangermsg"><strong class="msgsource">Stranger:</strong> <span class="notranslate">Hola</span>
+                  </p>
+                </div> -->
+
+              </div>
+            </div>
+            <div class="logwrapperpush"></div>
+          </div>
+          <div class="controlwrapper">
+            <form id="input-form" class="form-inline">
+              <table class="controltable" cellpadding="0" cellspacing="0" border="0">
+                <tbody>
+                  <tr>
+                    <!-- TODO: Use it to change room or name
+                      <td class="disconnectbtncell">
+                      <div class="disconnectbtnwrapper newbtn"><button class="disconnectbtn">New<div class="btnkbshortcut">Esc
+                          </div></button></div>
+                    </td> -->
+                    <td class="chatmsgcell">
+                      <div class="form-group" style="width: 100%;">
+                        <div class="chatmsgwrapper"><textarea id="input-text" class="chatmsg" cols="80" rows="3"></textarea></div>
+                      </div>
+                    </td>
+                    <td class="sendbthcell">
+                      <div class="disconnectbtnwrapper newbtn">
+                        <button class="disconnectbtn" type="submit">Send<div class="btnkbshortcut">Send</div></button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </form>
+          </div>
         </div>
-        <button class="btn btn-primary" type="submit">Send</button>
-      </form>
-      <div class="page-header">
-        <h1>Chat Log</h1>
-      </div>
-      <div id="chat-text">
       </div>
     </div>
 
-    <a href="https://github.com/heroku-examples/python-websockets-chat"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+    <a href="https://github.com/WiL-dev/python-websockets-chat" target="_blank">
+      <img style="position: absolute; top: 0; right: 0; border: 0; z-index: 1000;"
+        src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
 
-    <div id="login" class="modal">
+    <div id="login" class="modal" style="overflow: hidden">
       <form id="input-login" class="form-inline">
-
         <div class="form-group">
           <input id="input-room" type="text" class="form-control" placeholder="Enter room" autofocus />
         </div>
@@ -49,11 +87,11 @@
     <!-- jQuery Modal -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
     <script>
-    $("#login").modal({
-      escapeClose: false,
-      clickClose: false,
-      showClose: false
-    });
+      $("#login").modal({
+        escapeClose: false,
+        clickClose: false,
+        showClose: false
+      });
     </script>
   </body>
 </html>
