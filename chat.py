@@ -10,7 +10,8 @@ This simple application uses WebSockets to run a primitive chat server.
 import os
 import redis
 import gevent
-from flask import Flask, render_template
+import json
+from flask import Flask, render_template, request
 from flask_sockets import Sockets
 
 REDIS_URL = os.environ['REDIS_URL']
@@ -28,7 +29,7 @@ class ChatBackend(object):
     """Interface for registering and updating WebSocket clients."""
 
     def __init__(self):
-        self.clients = list()
+        self.clients = {}
         self.pubsub = redis.pubsub()
         self.pubsub.subscribe(REDIS_CHAN)
 
@@ -39,23 +40,25 @@ class ChatBackend(object):
                 app.logger.info(u'Sending message: {}'.format(data))
                 yield data
 
-    def register(self, client):
+    def register(self, ws, room, handle):
         """Register a WebSocket connection for Redis updates."""
-        self.clients.append(client)
+        self.clients[id(ws)] = { 'room': room, 'handle': handle, 'ws': ws }
 
-    def send(self, client, data):
+    def send(self, wsId, client, data):
         """Send given data to the registered client.
         Automatically discards invalid connections."""
         try:
-            client.send(data)
+            dataRoom = json.loads(data)['room']
+            if (client['room'] == dataRoom):
+                client['ws'].send(data)
         except Exception:
-            self.clients.remove(client)
+            del self.clients[wsId]
 
     def run(self):
         """Listens for new messages in Redis, and sends them to clients."""
         for data in self.__iter_data():
-            for client in self.clients:
-                gevent.spawn(self.send, client, data)
+            for wsId, client in self.clients.items():
+                gevent.spawn(self.send, wsId, client, data)
 
     def start(self):
         """Maintains Redis subscription in the background."""
@@ -84,7 +87,9 @@ def inbox(ws):
 @sockets.route('/receive')
 def outbox(ws):
     """Sends outgoing chat messages, via `ChatBackend`."""
-    chats.register(ws)
+    room = request.args.get('room')
+    handle = request.args.get('handle')
+    chats.register(ws, room, handle)
 
     while not ws.closed:
         # Context switch while `ChatBackend.start` is running in the background.
