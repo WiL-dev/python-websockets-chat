@@ -8,7 +8,6 @@ This simple application uses WebSockets to run a primitive chat server.
 """
 
 import os
-import logging
 import redis
 import gevent
 from flask import Flask, render_template
@@ -90,6 +89,4 @@ def outbox(ws):
     while not ws.closed:
         # Context switch while `ChatBackend.start` is running in the background.
         gevent.sleep(0.1)
-
-
 

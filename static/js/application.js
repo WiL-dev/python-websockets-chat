@@ -1,3 +1,5 @@
+import { generateName } from './random-names.js';
+
 // Support TLS-specific URLs, when appropriate.
 if (window.location.protocol == "https:") {
   var ws_scheme = "wss://";
@@ -5,9 +7,11 @@ if (window.location.protocol == "https:") {
   var ws_scheme = "ws://"
 };
 
+var handle = generateName();
 
 var inbox = new ReconnectingWebSocket(ws_scheme + location.host + "/receive");
 var outbox = new ReconnectingWebSocket(ws_scheme + location.host + "/submit");
+
 
 inbox.onmessage = function(message) {
   var data = JSON.parse(message.data);
@@ -30,8 +34,23 @@ outbox.onclose = function(){
 
 $("#input-form").on("submit", function(event) {
   event.preventDefault();
-  var handle = $("#input-handle")[0].value;
-  var text   = $("#input-text")[0].value;
+  var text = $("#input-text")[0].value;
+  console.log('data', JSON.stringify({ handle: handle, text: text }))
   outbox.send(JSON.stringify({ handle: handle, text: text }));
   $("#input-text")[0].value = "";
+});
+
+$("#input-handle")[0].value = handle;
+
+$("#input-login").on("submit", function (event) {
+  event.preventDefault();
+  let newHandle = $("#input-handle")[0].value;
+
+  if (!newHandle) {
+    alert('Handle cannot be null');
+    $("#input-handle")[0].value = generateName();
+  } else {
+    handle = newHandle;
+    $.modal.close();
+  }
 });
