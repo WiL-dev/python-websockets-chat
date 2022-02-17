@@ -45,12 +45,14 @@ $("#input-handle")[0].value = handle;
 $("#input-login").on("submit", function (event) {
   event.preventDefault();
   let newHandle = $("#input-handle")[0].value;
+  let room = $("#input-room")[0].value;
 
   if (!newHandle) {
-    alert('Handle cannot be null');
+    alert('Handle cannot be empty!');
     $("#input-handle")[0].value = generateName();
   } else {
-    handle = newHandle;
+    room = (room) ? room : 'global';
+    handle = `${room}@${newHandle}`;
     $.modal.close();
   }
 });
